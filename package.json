@@ -55,14 +55,28 @@
       "gatekeeperAssess": false
     },
     "win": {
-      "icon": "build/icon.png",
+      "icon": "build/icon.ico",
       "target": {
-        "target": "portable",
+        "target": "nsis",
         "arch": [
           "x64"
         ]
       },
       "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "license": "LICENSE",
+      "artifactName": "PlanBank-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": true,
+      "installerHeaderIcon": "build/icon.ico"
     },
     "files": [
       "**/*",
