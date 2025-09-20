@@ -63,8 +63,8 @@ npm run build
 ```
 
 빌드된 파일은 `dist/` 디렉토리에 생성됩니다:
-- macOS: `PlanBank-1.0.0-universal.dmg`
-- Windows: `PlanBank.exe`
+- macOS: `PlanBank-1.0.0-universal.dmg` (DMG 설치 파일)
+- Windows: `PlanBank-Setup-1.0.0.exe` (NSIS 설치 프로그램)
 
 ## 설정
 
@@ -116,14 +116,13 @@ npm run build
 xattr -cr /Applications/PlanBank.app
 ```
 
-### Windows에서 "Windows가 PC를 보호했습니다" 경고
-"추가 정보" → "실행" 클릭
-
 ## 라이선스
 
-Copyright © 2025 Kevin Park (박경종). All rights reserved.
+MIT License
 
-이 소프트웨어는 저작권자의 명시적인 허가 없이 사용, 복제, 수정, 배포할 수 없습니다.
+Copyright (c) 2025 Kevin Park (박경종)
+
+자세한 내용은 [LICENSE](LICENSE) 파일을 참조하세요.
 
 ## 문의
 
