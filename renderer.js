@@ -1,17 +1,15 @@
-// DOM 요소
 const elements = {
-  statusTitle: document.getElementById('status-title'),
-  statusMessage: document.getElementById('status-message'),
-  scanPort: document.getElementById('scan-port'),
-  errorPanel: document.getElementById('error-panel'),
-  errorMessage: document.getElementById('error-message'),
-  retryBtn: document.getElementById('retry-btn'),
-  progressBar: document.getElementById('progress-bar'),
-  networkStatus: document.getElementById('network-status')
+  statusTitle: document.getElementById("status-title"),
+  statusMessage: document.getElementById("status-message"),
+  errorPanel: document.getElementById("error-panel"),
+  errorMessage: document.getElementById("error-message"),
+  retryBtn: document.getElementById("retry-btn"),
+  progressBar: document.getElementById("progress-bar"),
+  networkStatus: document.getElementById("network-status"),
 };
 
 // 초기화
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   await initialize();
 });
 
@@ -19,14 +17,7 @@ async function initialize() {
   try {
     // 설정 로드
     const config = await window.electronAPI.getConfig();
-    document.title = `${config.appName} - Loading...`;
-    elements.scanPort.textContent = config.scanPort || '8800';
-
-    // 저장된 서버 체크
-    const savedServer = await window.electronAPI.getSavedServer();
-    if (savedServer && savedServer.url) {
-      elements.statusMessage.textContent = `Checking saved server: ${savedServer.url}`;
-    }
+    document.title = `${config.appName} - 제품 찾는중...`;
 
     // 네트워크 정보 표시
     elements.networkStatus.textContent = `Platform: ${window.electronAPI.platform}`;
@@ -38,55 +29,53 @@ async function initialize() {
     setTimeout(() => {
       startScan();
     }, 1000);
-
   } catch (error) {
-    console.error('Initialization failed:', error);
-    showError('Initialization failed');
+    console.error("Initialization failed:", error);
+    showError("초기화 실패");
   }
 }
 
 async function startScan() {
-  elements.statusTitle.textContent = 'Scanning Network...';
-  elements.errorPanel.classList.add('hidden');
+  elements.statusTitle.textContent = "제품을 찾는중...";
+  elements.statusMessage.textContent = "잠시만 기다려주세요...";
+  elements.errorPanel.classList.add("hidden");
 
   try {
     const result = await window.electronAPI.scanAndConnect();
 
     if (result.success) {
       // 서버를 찾았고 연결됨
-      elements.statusTitle.textContent = 'Server Found!';
-      elements.statusMessage.textContent = `Connecting to ${result.url}`;
+      elements.statusTitle.textContent = "서버 발견!";
+      elements.statusMessage.textContent = `다음에 연결중 ${result.url}`;
 
       // URL 저장
       await window.electronAPI.saveServer(result.url);
 
       // 성공 표시 (실제로는 main.js에서 페이지가 이미 전환됨)
       setTimeout(() => {
-        elements.progressBar.style.width = '100%';
+        elements.progressBar.style.width = "100%";
       }, 500);
-
     } else {
       // 서버를 찾지 못함
-      showError(result.message || 'No server found');
+      showError(result.message || "서버를 찾을 수 없습니다");
     }
-
   } catch (error) {
-    console.error('Scan failed:', error);
-    showError('Scan failed: ' + error.message);
+    console.error("Scan failed:", error);
+    showError("스캔 실패: " + error.message);
   }
 }
 
 function showError(message) {
-  elements.statusTitle.textContent = 'Server Not Found';
-  elements.statusMessage.textContent = 'Unable to locate server';
+  elements.statusTitle.textContent = "서버를 찾을 수 없습니다";
+  elements.statusMessage.textContent = "서버를 찾을 수 없습니다";
   elements.errorMessage.textContent = message;
-  elements.errorPanel.classList.remove('hidden');
-  elements.progressBar.style.width = '0%';
+  elements.errorPanel.classList.remove("hidden");
+  elements.progressBar.style.width = "0%";
 }
 
 // 재시도 버튼 이벤트
-elements.retryBtn.addEventListener('click', async () => {
-  elements.errorPanel.classList.add('hidden');
+elements.retryBtn.addEventListener("click", async () => {
+  elements.errorPanel.classList.add("hidden");
   animateProgress();
   await startScan();
 });

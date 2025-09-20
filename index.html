@@ -1,34 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'">
-  <title>Loading...</title>
+  <title>제품 찾는중...</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="loading-container">
     <div class="loading-content">
-      <div class="spinner"></div>
-      <h2 id="status-title">Searching for Server...</h2>
-      <p id="status-message">Scanning network on port <span id="scan-port">...</span></p>
+      <div class="emoji-icon">🔍</div>
+      <h2 id="status-title">제품을 찾는중...</h2>
+      <p id="status-message">잠시만 기다려주세요...</p>
 
       <div class="progress">
         <div class="progress-bar" id="progress-bar"></div>
       </div>
+                </div>
 
-      <div id="error-panel" class="error-panel hidden">
-        <p class="error-message" id="error-message">Server not found</p>
-        <button id="retry-btn" class="btn-retry">Retry Scan</button>
-      </div>
+                <div id="error-panel" class="error-panel hidden">
+                    <p class="error-message" id="error-message">
+                        Server not found
+                    </p>
+                    <button id="retry-btn" class="btn-retry">Retry Scan</button>
+                </div>
 
-      <div class="network-info">
-        <span id="network-status"></span>
-      </div>
-    </div>
-  </div>
+                <div class="network-info">
+                    <span id="network-status"></span>
+                </div>
+            </div>
+        </div>
 
-  <script src="renderer.js"></script>
-</body>
+        <script src="renderer.js"></script>
+    </body>
 </html>
