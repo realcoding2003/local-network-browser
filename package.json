@@ -1,0 +1,71 @@
+{
+  "name": "local-network-browser",
+  "version": "1.0.0",
+  "description": "로컬 서버 제품을 위한 브랜딩 패키지 브라우저 - 자동 네트워크 탐색 및 연결",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win",
+    "build": "electron-builder --mac --win"
+  },
+  "keywords": [
+    "electron",
+    "network",
+    "browser",
+    "local",
+    "server",
+    "branding",
+    "package"
+  ],
+  "author": "Kevin Park (박경종) <kevinpark@okyc.kr>",
+  "license": "Proprietary",
+  "copyright": "Copyright © 2025 Kevin Park. All rights reserved.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevinpark/local-network-browser"
+  },
+  "devDependencies": {
+    "canvas": "^3.2.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.kevinpark.networkbrowser",
+    "productName": "BISTEP-PLAN-BANK",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.utilities",
+      "icon": "build/icon.png",
+      "target": {
+        "target": "dmg",
+        "arch": [
+          "x64",
+          "arm64"
+        ]
+      },
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "win": {
+      "icon": "build/icon.png",
+      "target": {
+        "target": "portable",
+        "arch": [
+          "x64"
+        ]
+      },
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "files": [
+      "**/*",
+      "!dist/**/*",
+      "!node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+    ]
+  }
+}

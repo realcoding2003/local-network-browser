@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- 파일 시스템 접근 권한 -->
+    <key>com.apple.security.files.user-selected.read-write</key>
+    <true/>
+
+    <!-- 다운로드 폴더 접근 권한 -->
+    <key>com.apple.security.files.downloads.read-write</key>
+    <true/>
+
+    <!-- 네트워크 클라이언트 권한 -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+
+    <!-- 네트워크 서버 권한 -->
+    <key>com.apple.security.network.server</key>
+    <true/>
+
+    <!-- 카메라 접근 (웹캠 사용 시) -->
+    <key>com.apple.security.device.camera</key>
+    <true/>
+
+    <!-- 마이크 접근 (음성 녹음 시) -->
+    <key>com.apple.security.device.microphone</key>
+    <true/>
+
+    <!-- 앱 샌드박스 비활성화 (개발용) -->
+    <key>com.apple.security.app-sandbox</key>
+    <false/>
+
+    <!-- CS 권한 (코드 서명 관련) -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+</dict>
+</plist>
