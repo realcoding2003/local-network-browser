@@ -53,6 +53,12 @@ npm run build      # Build for all platforms
 ## Implementation Status
 프로젝트 구현 완료. 모든 핵심 기능이 작동하며, macOS와 Windows용 빌드를 생성할 수 있습니다.
 
+### Recent Updates
+- macOS 네트워크 스캔 수정: en0, en1 등 macOS 인터페이스 지원 추가
+- Universal Binary 빌드 설정: Intel/Apple Silicon Mac 모두 지원
+- 영문 제품명 변경: 기획뱅크 → PlanBank (한글 이름 빌드 오류 해결)
+- 플랫폼별 네트워크 스캔 최적화: macOS, Windows, Linux별 타임아웃 조정
+
 ## Configuration
 `config.json` 파일을 통해 브랜딩 커스터마이징:
 - `appName`: 앱 타이틀바에 표시될 제품명

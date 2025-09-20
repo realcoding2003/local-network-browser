@@ -4,12 +4,22 @@ const os = require('os');
 // 현재 네트워크의 IP 주소 가져오기
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
-  const isWindows = process.platform === 'win32';
+  const platform = process.platform;
 
-  // 윈도우에서는 이더넷과 Wi-Fi 인터페이스를 우선 확인
-  const priorityNames = isWindows
-    ? ['Ethernet', 'Wi-Fi', 'WiFi', '이더넷', 'Local Area Connection']
-    : [];
+  console.log(`Platform: ${platform}`);
+  console.log(`Available interfaces: ${Object.keys(interfaces).join(', ')}`);
+
+  // 플랫폼별 우선순위 인터페이스
+  let priorityNames = [];
+  if (platform === 'win32') {
+    priorityNames = ['Ethernet', 'Wi-Fi', 'WiFi', '이더넷', 'Local Area Connection'];
+  } else if (platform === 'darwin') {
+    // macOS 인터페이스
+    priorityNames = ['en0', 'en1', 'en2', 'en3', 'en4', 'en5'];
+  } else {
+    // Linux
+    priorityNames = ['eth0', 'eth1', 'wlan0', 'wlan1', 'enp0s3'];
+  }
 
   // 우선순위 인터페이스 먼저 확인
   for (const priorityName of priorityNames) {
@@ -174,41 +184,71 @@ async function checkServerHealth(host, port) {
 
 // 단일 서버 찾기 (특정 포트만 스캔)
 async function findServer(port, timeout = null) {
-  // 윈도우에서는 타임아웃을 더 길게 설정
-  const isWindows = process.platform === 'win32';
-  const actualTimeout = timeout || (isWindows ? 1000 : 500);
+  // 플랫폼별 타임아웃 설정
+  const platform = process.platform;
+  let actualTimeout;
+  if (timeout) {
+    actualTimeout = timeout;
+  } else if (platform === 'win32') {
+    actualTimeout = 1000;
+  } else if (platform === 'darwin') {
+    actualTimeout = 750;  // macOS용 타임아웃
+  } else {
+    actualTimeout = 500;
+  }
+
+  console.log(`[Network Scanner] Starting scan on ${platform} with timeout ${actualTimeout}ms`);
+
   const localIP = getLocalIP();
   if (!localIP) {
-    console.error('No network interface found');
+    console.error('[Network Scanner] ERROR: No network interface found');
+    console.error('[Network Scanner] Available interfaces:', os.networkInterfaces());
     return null;
   }
 
   const subnet = getNetworkSubnet(localIP.address, localIP.netmask);
-  console.log(`Scanning network ${localIP.name}: ${subnet}.x for port ${port} (timeout: ${actualTimeout}ms)`);
+  console.log(`[Network Scanner] Scanning network ${localIP.name}: ${subnet}.x for port ${port}`);
 
   // localhost 먼저 체크
+  console.log(`[Network Scanner] Checking localhost:${port}...`);
   const localhostResult = await checkPort('localhost', port, actualTimeout);
   if (localhostResult.open) {
-    console.log(`Found server at localhost:${port}`);
+    console.log(`[Network Scanner] ✓ Found server at localhost:${port}`);
     return `http://localhost:${port}`;
+  }
+  console.log(`[Network Scanner] localhost:${port} - no response`);
+
+  // 127.0.0.1도 체크
+  console.log(`[Network Scanner] Checking 127.0.0.1:${port}...`);
+  const loopbackResult = await checkPort('127.0.0.1', port, actualTimeout);
+  if (loopbackResult.open) {
+    console.log(`[Network Scanner] ✓ Found server at 127.0.0.1:${port}`);
+    return `http://127.0.0.1:${port}`;
   }
 
   // 네트워크의 모든 IP 스캔 (1-254)
+  console.log(`[Network Scanner] Starting network scan of ${subnet}.1-254...`);
   const scanPromises = [];
+  let scannedCount = 0;
+
   for (let i = 1; i <= 254; i++) {
     const ip = `${subnet}.${i}`;
     scanPromises.push(
       checkPort(ip, port, actualTimeout).then(result => {
+        scannedCount++;
+        if (scannedCount % 10 === 0) {
+          console.log(`[Network Scanner] Progress: ${scannedCount}/254 IPs scanned`);
+        }
         if (result.open) {
-          console.log(`Found server at ${ip}:${port}`);
+          console.log(`[Network Scanner] ✓ Found server at ${ip}:${port}`);
           return `http://${ip}:${port}`;
         }
         return null;
       })
     );
 
-    // 배치로 처리 (윈도우는 25개씩, 다른 OS는 50개씩)
-    const batchSize = isWindows ? 25 : 50;
+    // 배치로 처리 (플랫폼별로 다르게)
+    const batchSize = platform === 'win32' ? 25 : (platform === 'darwin' ? 30 : 50);
     if (scanPromises.length >= batchSize || i === 254) {
       const results = await Promise.all(scanPromises);
       const found = results.find(url => url !== null);
@@ -219,7 +259,7 @@ async function findServer(port, timeout = null) {
     }
   }
 
-  console.log(`No server found on port ${port}`);
+  console.log(`[Network Scanner] ✗ No server found on port ${port} after scanning 254 IPs`);
   return null;
 }
 

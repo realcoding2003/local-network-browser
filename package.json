@@ -32,20 +32,23 @@
   },
   "build": {
     "appId": "com.kevinpark.networkbrowser",
-    "productName": "BISTEP-PLAN-BANK",
+    "productName": "PlanBank",
     "directories": {
       "output": "dist"
     },
     "mac": {
       "category": "public.app-category.utilities",
       "icon": "build/icon.png",
-      "target": {
-        "target": "dmg",
-        "arch": [
-          "x64",
-          "arm64"
-        ]
-      },
+      "target": [
+        {
+          "target": "dmg",
+          "arch": "universal"
+        },
+        {
+          "target": "zip",
+          "arch": "universal"
+        }
+      ],
       "entitlements": "build/entitlements.mac.plist",
       "entitlementsInherit": "build/entitlements.mac.plist",
       "hardenedRuntime": false,

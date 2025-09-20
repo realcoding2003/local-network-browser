@@ -27,6 +27,7 @@ async function createWindow() {
     minWidth: 800,
     minHeight: 600,
     title: config.appName || 'Local Network Browser',
+    autoHideMenuBar: true,  // 메뉴바 자동 숨김 (Alt 키로 토글 가능)
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

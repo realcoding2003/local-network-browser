@@ -1,190 +1,131 @@
 # Local Network Browser
 
-<p align="center">
-  <img src="build/icon.png" alt="Local Network Browser" width="128" height="128">
-</p>
+로컬 네트워크에서 자동으로 서버를 탐색하고 연결하는 데스크톱 애플리케이션
 
-<p align="center">
-  <strong>Transform your local server into a branded desktop application</strong>
-</p>
+## 개요
 
-<p align="center">
-  <a href="#features">Features</a> •
-  <a href="#installation">Installation</a> •
-  <a href="#usage">Usage</a> •
-  <a href="#configuration">Configuration</a> •
-  <a href="#build">Build</a> •
-  <a href="#contributing">Contributing</a>
-</p>
+Local Network Browser는 로컬 서버 기반 제품을 사용자 친화적인 데스크톱 애플리케이션으로 패키징하는 도구입니다. 복잡한 URL 입력 없이 자동으로 네트워크를 스캔하여 서버를 찾아 연결합니다.
 
-## Overview
+## 주요 기능
 
-Local Network Browser is an open-source tool that packages local web servers into standalone desktop applications. It automatically discovers and connects to servers running on your local network, eliminating the need for users to manually enter URLs or configure network settings.
+- 🔍 **자동 네트워크 스캔**: 로컬 네트워크에서 지정된 포트의 서버 자동 탐색
+- 🖥️ **크로스 플랫폼**: macOS(Intel/Apple Silicon Universal Binary), Windows 지원
+- ⚡ **빠른 연결**: 이전 연결 정보 저장으로 빠른 재연결
+- 🎨 **커스터마이징**: config.json을 통한 브랜딩 설정
+- 🔒 **보안**: Context Isolation 활성화로 보안 강화
 
-Perfect for developers who want to distribute their web-based applications as native desktop apps without requiring users to have technical knowledge about ports, IP addresses, or web browsers.
+## 시스템 요구사항
 
-## ✨ Features
+### macOS
+- macOS 10.12 이상
+- Intel 또는 Apple Silicon 프로세서
 
-- 🔍 **Automatic Network Discovery** - Scans all IPs in your local network subnet automatically
-- ⚡ **Instant Connection** - Remembers and instantly connects to previously discovered servers
-- 🎨 **Custom Branding** - Easy configuration for app name and branding
-- 🖥️ **Cross-Platform** - Supports macOS (Intel & Apple Silicon) and Windows
-- 🔒 **Secure** - Runs with context isolation and security best practices
-- 📦 **Zero Configuration** - Works out of the box with minimal setup
+### Windows
+- Windows 10 이상
+- x64 아키텍처
 
-## 📋 Prerequisites
+### 개발 환경
+- Node.js 16.0 이상
+- npm 7.0 이상
 
-- Node.js 16.0 or higher
-- npm 7.0 or higher
-- For building: macOS (for Mac builds) or Windows (for Windows builds)
+## 설치 및 실행
 
-## 🚀 Installation
+### 개발 환경 설정
 
 ```bash
-# Clone the repository
+# 저장소 클론
 git clone https://github.com/kevinpark/local-network-browser.git
 
-# Navigate to project directory
+# 프로젝트 디렉토리로 이동
 cd local-network-browser
 
-# Install dependencies
+# 의존성 설치
 npm install
 ```
 
-## 💻 Usage
-
-### Development Mode
+### 개발 모드 실행
 
 ```bash
 npm start
 ```
 
-This will launch the application in development mode with auto-reload enabled.
-
-### Production Build
+### 빌드
 
 ```bash
-# Build for current platform
-npm run build
-
-# Build for macOS only
+# macOS용 빌드 (Universal Binary - Intel + Apple Silicon)
 npm run build-mac
 
-# Build for Windows only
+# Windows용 빌드
 npm run build-win
+
+# 모든 플랫폼 빌드
+npm run build
 ```
 
-Built applications will be available in the `dist/` directory.
+빌드된 파일은 `dist/` 디렉토리에 생성됩니다:
+- macOS: `PlanBank-1.0.0-universal.dmg`
+- Windows: `PlanBank.exe`
 
-## ⚙️ Configuration
+## 설정
 
-Configure your application by editing `config.json`:
+`config.json` 파일을 수정하여 애플리케이션을 커스터마이징할 수 있습니다:
 
 ```json
 {
-  "appName": "Your App Name",
-  "scanPort": 8080
+  "appName": "PlanBank",
+  "scanPort": 8800
 }
 ```
 
-| Option | Type | Description | Default |
-|--------|------|-------------|---------|
-| `appName` | string | Name displayed in the application title bar | "Local Network Browser" |
-| `scanPort` | number | Port number to scan for your server | 8800 |
+- `appName`: 애플리케이션 타이틀바에 표시될 이름
+- `scanPort`: 스캔할 서버 포트 번호
 
-### Advanced Configuration
 
-For production builds, you can customize additional settings in `package.json`:
-
-```json
-{
-  "build": {
-    "appId": "com.yourcompany.yourapp",
-    "productName": "Your Product Name"
-  }
-}
-```
-
-## 🏗️ Architecture
+## 프로젝트 구조
 
 ```
-local-network-browser/
-├── main.js              # Electron main process
-├── renderer.js          # Frontend logic
-├── network-scanner.js   # Network discovery module
-├── preload.js          # Bridge between main and renderer
-├── index.html          # UI structure
-├── style.css           # UI styling
-└── config.json         # Application configuration
+├── main.js              # Electron 메인 프로세스
+├── preload.js           # 프리로드 스크립트 (보안)
+├── renderer.js          # UI 렌더러 프로세스
+├── network-scanner.js   # 네트워크 스캔 모듈
+├── index.html           # 로딩 화면 UI
+├── style.css           # 스타일시트
+├── config.json         # 애플리케이션 설정
+└── build/              # 빌드 리소스
+    ├── icon.png        # 앱 아이콘
+    └── entitlements.mac.plist  # macOS 권한 설정
 ```
 
-### How It Works
+## 기술 스택
 
-1. **Network Scanning**: The app scans all IP addresses (1-254) in your local subnet
-2. **Port Checking**: Tests the configured port on each IP for an active server
-3. **Auto-Connection**: When a server is found, automatically loads it in the embedded browser
-4. **Session Persistence**: Saves the server URL for instant connection on next launch
+- **Electron**: 크로스 플랫폼 데스크톱 앱 프레임워크
+- **Node.js**: 네트워크 스캔 및 백엔드 로직
+- **electron-builder**: 앱 패키징 및 배포
 
-## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 문제 해결
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+### 네트워크 스캔이 실패하는 경우
+- 방화벽 설정 확인
+- 서버가 지정된 포트에서 실행 중인지 확인
+- 같은 네트워크에 연결되어 있는지 확인
 
-### Development Guidelines
+### macOS에서 "개발자를 확인할 수 없음" 오류
+```bash
+# 터미널에서 실행
+xattr -cr /Applications/PlanBank.app
+```
 
-- Follow the existing code style
-- Add tests for new features
-- Update documentation as needed
-- Ensure cross-platform compatibility
+### Windows에서 "Windows가 PC를 보호했습니다" 경고
+"추가 정보" → "실행" 클릭
 
-## 📝 Use Cases
+## 라이선스
 
-- **Local Development Tools**: Package development servers as desktop apps
-- **Enterprise Applications**: Distribute internal web apps without IT configuration
-- **IoT Interfaces**: Create desktop clients for IoT device management
-- **Educational Software**: Deploy learning platforms that run locally
-- **Point of Sale Systems**: Transform web-based POS into desktop applications
+Copyright © 2025 Kevin Park (박경종). All rights reserved.
 
-## 🛠️ Troubleshooting
+이 소프트웨어는 저작권자의 명시적인 허가 없이 사용, 복제, 수정, 배포할 수 없습니다.
 
-### Windows Network Issues
+## 문의
 
-If the app cannot find servers on Windows:
-- Ensure Windows Firewall allows the application
-- Try running as Administrator
-- Check that the server is accessible from a web browser first
+Kevin Park - kevinpark@okyc.kr
 
-### macOS Permission Issues
-
-If prompted for network permissions:
-- Go to System Preferences > Security & Privacy
-- Allow the application to access local network
-
-## 📄 License
-
-Copyright © 2025 Kevin Park. All rights reserved.
-
-This project is proprietary software. See the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Kevin Park**
-
-- GitHub: [@realcoding2003](https://github.com/realcoding2003)
-
-## 🙏 Acknowledgments
-
-- Built with [Electron](https://www.electronjs.org/)
-- Network scanning inspired by local development needs
-- Icon and UI design for optimal user experience
-
----
-
-<p align="center">
-  Made with ❤️ for developers who want to simplify local server deployment
-</p>
