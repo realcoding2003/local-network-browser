@@ -19,7 +19,7 @@
     "package"
   ],
   "author": "Kevin Park (박경종) <kevinpark@okyc.kr>",
-  "license": "Proprietary",
+  "license": "MIT",
   "copyright": "Copyright © 2025 Kevin Park. All rights reserved.",
   "repository": {
     "type": "git",
@@ -71,9 +71,10 @@
       "perMachine": false,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
+      "shortcutName": "기획뱅크",
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
-      "license": "LICENSE",
+      "license": "LICENSE.installer.txt",
       "artifactName": "PlanBank-Setup-${version}.${ext}",
       "deleteAppDataOnUninstall": true,
       "installerHeaderIcon": "build/icon.ico"

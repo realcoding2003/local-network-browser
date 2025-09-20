@@ -33,3 +33,6 @@ electron-builder.yml
 
 # Server data (persisted connection info)
 server.json
+
+# Installer license (internal use only)
+LICENSE.installer.txt
